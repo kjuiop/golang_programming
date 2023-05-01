@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"golang_programming/benchmark/saying"
+	"golang_programming/benchmark/greet/saying"
 )
 
 func main() {
