@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"unsafe"
 )
 
 type Person struct {
@@ -15,10 +16,10 @@ func main() {
 	// 변수를 선언만 해도, 위치 (&m) , 사이즈는 8만큼 할당을 받은 상태 64bit 일 때 8, 32bit 일 때 4
 	// 변수의 주소값 과 포인터는 다르다. 변수의 주소값은 map 을 가리키는 변수 자체의 주소, 포인터 값은 map 을 가리키는 주소
 	var m map[string]Person
-	fmt.Printf("m address : %p,m pointer : %p\n", m, &m)
+	fmt.Printf("m address : %p, m pointer : %p size : %v\n", &m, m, unsafe.Sizeof(m))
 
 	m = make(map[string]Person)
-	fmt.Printf("m address : %p, m pointer : %p\n", m, &m)
+	fmt.Printf("m address : %p, m pointer : %p size : %v\n", &m, m, unsafe.Sizeof(m))
 
 	m["00000001"] = p
 
