@@ -22,6 +22,6 @@ func main() {
 }
 
 func one(m1 map[string]Person) {
-	m1["00000002"] = Person{Name: "Jake", Age: 30}
+	m1["00000001"] = Person{Name: "Jake", Age: 30}
 	fmt.Printf("[02] m1 address : %p,m1 pointer : %p m1 value : %v\n", m1, &m1, m1)
 }
