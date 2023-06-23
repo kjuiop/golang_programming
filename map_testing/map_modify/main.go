@@ -2,15 +2,17 @@ package main
 
 import "fmt"
 
-func modifyMap(m map[string]int) {
-	m["key"] = 42
+func modifyMap(m2 map[string]int) {
+	m2["key"] = 42
+	fmt.Printf("[02] m1 address : %p,m1 pointer : %p m1 value : %v\n", &m2, m2, m2["key"])
 }
 
 func main() {
-	myMap := make(map[string]int)
-	myMap["key"] = 10
+	m1 := make(map[string]int)
+	m1["key"] = 10
 
-	modifyMap(myMap)
+	fmt.Printf("[01] m1 address : %p,m1 pointer : %p m1 value : %v\n", &m1, m1, m1["key"])
+	modifyMap(m1)
 
-	fmt.Println(myMap["key"]) // 출력: 42
+	fmt.Printf("[03] m1 address : %p,m1 pointer : %p m1 value : %v\n", &m1, m1, m1["key"])
 }
