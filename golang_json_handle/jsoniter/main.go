@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/json-iterator/go"
 )
 
@@ -18,7 +18,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(string(encoded))
+	spew.Dump(string(encoded))
 
 	// 기본 패키지와 최대한 호환성을 맞춘 방식으로 unMarshal 을 해라
 	json := jsoniter.ConfigCompatibleWithStandardLibrary
@@ -27,7 +27,7 @@ func main() {
 	if err := json.Unmarshal(encoded, &decoded); err != nil {
 		panic(err)
 	}
-	fmt.Println(decoded)
+	spew.Dump(decoded)
 }
 
 /*
