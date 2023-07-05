@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/davecgh/go-spew v1.1.1
+	github.com/jmespath/go-jmespath v0.4.0
 	github.com/json-iterator/go v1.1.12
 )
 
