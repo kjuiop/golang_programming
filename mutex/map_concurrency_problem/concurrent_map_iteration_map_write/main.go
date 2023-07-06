@@ -16,13 +16,12 @@ func main() {
 
 	testMap := make(map[int]*Person)
 	wg := sync.WaitGroup{}
-	testMap[1] = NewPerson(1)
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		for i := 1; i <= 50000; i++ {
-			testMap[1] = NewPerson(i)
+			testMap[i] = NewPerson(i)
 			fmt.Printf("test 1번 고루틴 %p: %d\n", testMap[1], i)
 		}
 	}()
