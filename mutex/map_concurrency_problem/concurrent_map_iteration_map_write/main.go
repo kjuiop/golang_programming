@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"sync"
-	"time"
 )
 
 type Person struct {
@@ -40,7 +39,7 @@ func printPersonAge(testMap map[int]*Person) {
 			fmt.Printf("test 2번 고루틴 Person Age : %d\n", person.Age)
 		}
 
-		time.Sleep(1 * time.Millisecond)
+		//time.Sleep(1 * time.Millisecond)
 	}
 }
 
