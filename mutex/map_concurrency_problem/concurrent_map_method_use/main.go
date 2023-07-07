@@ -23,9 +23,7 @@ func main() {
 		defer wg.Done()
 		for i := 1; i <= 50000; i++ {
 			person := testMap[1]
-			person.Age = -1
-			person.printPersonName()
-			fmt.Printf("test 1번 고루틴 %p: %d\n", testMap[1], i)
+			fmt.Printf("test 1번 고루틴 %p: %d\n", person, i)
 		}
 	}()
 
@@ -38,7 +36,7 @@ func printPersonAge(testMap map[int]*Person) {
 
 	for {
 		for _, person := range testMap {
-			fmt.Printf("test 2번 고루틴 Person Age : %d\n", person.Age)
+			person.printPersonName()
 		}
 	}
 }
