@@ -20,6 +20,12 @@ func occurPanic() {
 	}()
 
 	/**
+	// defer 구문을 나눠서 사용하는 방법
+	defer Recover()
+	defer printString()
+	*/
+
+	/**
 	recover 를 직접 호출하는 경우 정상 동작
 	defer Recover()
 	*/
@@ -31,6 +37,10 @@ func occurPanic() {
 
 func recoverPrint() {
 	fmt.Println("recover statement worked")
+}
+
+func printString() {
+	fmt.Println("print String, defer 구문 2개")
 }
 
 func Recover() {
