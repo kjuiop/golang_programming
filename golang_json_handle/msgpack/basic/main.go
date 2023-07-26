@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/shamaton/msgpack/v2"
 	"log"
 )
@@ -19,11 +19,13 @@ func main() {
 		log.Println("error : ", err.Error())
 	}
 
+	spew.Dump(d)
+
 	r := Person{}
 	if err := msgpack.Unmarshal(d, &r); err != nil {
 		log.Println("error : ", err.Error())
 	}
 
-	fmt.Println("Original:", v)
-	fmt.Println("Unmarshaled:", r)
+	spew.Dump(r)
+
 }
