@@ -14,10 +14,11 @@ func main() {
 		return
 	}
 
-	_, err = zookeeper.NewZkClient(cfg)
+	zkCon, err := zookeeper.NewZkClient(cfg)
 	if err != nil {
 		log.Printf("[NewHandler] failed zookeeper Connection error : %v\n", err)
 		return
 	}
+	defer zkCon.EndZookeeper()
 
 }
