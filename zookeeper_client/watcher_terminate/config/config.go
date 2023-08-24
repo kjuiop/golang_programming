@@ -8,7 +8,7 @@ import (
 type Config struct {
 	ZookeeperInfo struct {
 		Host     string `envconfig:"TEST_ZOOKEEPER_HOST" default:"172.20.0.1:2185"`
-		RootNode string `envconfig:"TEST_ZOOKEEPER_ROOT_NODE" default:"/transcoder"`
+		RootNode string `envconfig:"TEST_ZOOKEEPER_ROOT_NODE" default:"/root"`
 	}
 }
 

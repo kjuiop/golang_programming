@@ -27,7 +27,7 @@ func main() {
 	}
 	defer zkCon.EndZookeeper()
 
-	path := fmt.Sprintf("%s/%s", cfg.ZookeeperInfo.RootNode, "transcoders/kollus")
+	path := fmt.Sprintf("%s/%s", cfg.ZookeeperInfo.RootNode, "job")
 	if err := watcherChildrenNode(path, zkCon); err != nil {
 		log.Printf("watcher children node err : %v\n", err)
 	}
