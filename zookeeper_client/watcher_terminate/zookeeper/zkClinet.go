@@ -2,6 +2,7 @@ package zookeeper
 
 import (
 	"github.com/curator-go/curator"
+	"github.com/samuel/go-zookeeper/zk"
 	"golang_programming/zookeeper_client/watcher_terminate/config"
 	"log"
 	"time"
@@ -36,6 +37,15 @@ func NewZkClient(cfg *config.Config) (*ZKCon, error) {
 	}
 
 	return zkCon, nil
+}
+
+func (zkCon *ZKCon) WatcherChildrenNodeToMap(path string, fn func(*zk.Event)) ([]string, error) {
+	val, err := zkCon.curator.GetChildren().UsingWatcher(curator.NewWatcher(fn)).ForPath(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return val, nil
 }
 
 func (zkCon *ZKCon) CheckExists(path string) error {

@@ -1,6 +1,6 @@
 module golang_programming
 
-go 1.20
+go 1.18
 
 require (
 	github.com/curator-go/curator v0.0.0-20180923140012-8a961ea3b252
@@ -13,6 +13,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/orcaman/concurrent-map v1.0.0
 	github.com/redis/go-redis/v9 v9.0.5
+	github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da
 	github.com/shamaton/msgpack/v2 v2.1.1
 	xorm.io/xorm v1.3.2
 )
@@ -29,7 +30,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da // indirect
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
