@@ -45,7 +45,7 @@ func makePayloadMsg() ([]byte, error) {
 		AccountId:        "jake",
 		ContentId:        "jake_overaly_test_1",
 		Error:            4882,
-		GroupNm:          "kollus",
+		GroupNm:          "gig",
 		MediaOutputs:     "",
 		SnapshotOutput:   "",
 		State:            "complete",
