@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/streadway/amqp"
 	"log"
 )
@@ -27,19 +28,22 @@ func main() {
 	}(ch)
 
 	queueName := "go-test-request"
-	q, err := ch.QueueDeclare(queueName, false, false, false, false, nil)
+	q, err := ch.QueueDeclare(queueName, true, false, false, false, nil)
 	if err != nil {
 		log.Printf("Failed to declare a queue, err : %s", err.Error())
 	}
 
-	body := "Hello rabbitMq Consumer"
-	if err := ch.Publish("", q.Name, false, false,
-		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte(body),
-		}); err != nil {
-		log.Printf("Failed to publish a queue, err : %s", err.Error())
+	for i := 0; i < 30; i++ {
+		body := fmt.Sprintf("[%d] Hello rabbitMq Consumer", i+1)
+		if err := ch.Publish("", q.Name, false, false,
+			amqp.Publishing{
+				ContentType: "text/plain",
+				Body:        []byte(body),
+			}); err != nil {
+			log.Printf("Failed to publish a queue, err : %s", err.Error())
+		}
+
+		log.Printf("Success Sent : %s\n", body)
 	}
 
-	log.Printf("Success Sent : %s\n", body)
 }
