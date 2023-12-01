@@ -1,6 +1,6 @@
 module golang_programming
 
-go 1.18
+go 1.20
 
 require (
 	github.com/curator-go/curator v0.0.0-20180923140012-8a961ea3b252
@@ -17,6 +17,7 @@ require (
 	github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da
 	github.com/shamaton/msgpack/v2 v2.1.1
 	github.com/streadway/amqp v1.1.0
+	gopkg.in/tylerb/graceful.v1 v1.2.15
 	xorm.io/xorm v1.3.2
 )
 
