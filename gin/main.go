@@ -1,15 +1,29 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
+	"log"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
 )
 
+var uploadMode *string
+
 func main() {
+
+	uploadMode = flag.String("mode", "", "upload mode, graceful or general -mode {mode}")
+	flag.Parse()
+
+	if *uploadMode == "" {
+		flag.Usage() // 사용법 출력
+		log.Fatalf("fail init, require upload mode, graceful or general -mode {mode} flag value")
+	}
+
 	gMux := gin.Default()
 
 	gMux.LoadHTMLGlob("/home/jake/workspace/study/golang_programming/gin/templates/*")
@@ -57,5 +71,19 @@ func main() {
 
 	})
 
-	gMux.Run(":8081")
+	if *uploadMode == "general" {
+		gMux.Run(":8081")
+	} else if *uploadMode == "graceful" {
+		srv := &graceful.Server{
+			Timeout:   0,
+			ConnState: func(conn net.Conn, state http.ConnState) {},
+			Server: &http.Server{
+				Addr:    ":8081",
+				Handler: gMux,
+			},
+		}
+
+		_ = srv.ListenAndServe()
+	}
+
 }
