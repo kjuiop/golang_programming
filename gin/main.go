@@ -27,7 +27,7 @@ func main() {
 
 	gMux := gin.Default()
 
-	gMux.LoadHTMLGlob("/home/jake/workspace/study/golang_programming/gin/templates/*")
+	gMux.LoadHTMLGlob("/usr/src/app/templates/*")
 	gMux.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
@@ -52,7 +52,7 @@ func main() {
 
 			// 업로드된 파일 처리
 			if part.FileName() != "" {
-				filename := filepath.Join("/home/jake/workspace/study/golang_programming/gin/uploads", part.FileName())
+				filename := filepath.Join("/usr/src/app/uploads", part.FileName())
 				out, err := os.Create(filename)
 				if err != nil {
 					c.String(http.StatusInternalServerError, fmt.Sprintf("Create file error: %s", err.Error()))
@@ -83,7 +83,6 @@ func main() {
 				Handler: gMux,
 			},
 		}
-
 		_ = srv.ListenAndServe()
 	}
 
