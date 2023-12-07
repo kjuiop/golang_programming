@@ -2,11 +2,20 @@ package main
 
 import (
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
 func main() {
+
 	go printRoutine()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	<-quit
 }
 
 func printRoutine() {
@@ -23,7 +32,7 @@ func printRoutine() {
 			i++
 			log.Printf("print Routine : %d\n", i)
 			isComplete = false
-			time.Sleep(1 * time.Second)
+			time.Sleep(3 * time.Second)
 			isComplete = true
 		}
 	}
