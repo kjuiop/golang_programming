@@ -11,17 +11,22 @@ import (
 
 func main() {
 
-	go printRoutine(context.Background(), time.Second*10)
+	go printRoutine(context.Background(), time.Second*1)
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 	<-quit
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	defer func() {
+		log.Println("receive cancel signal")
+		//cancel()
+		// cancel 은 신호 전파용
+	}()
 
 	log.Println("receive sigint signal")
 	<-ctx.Done()
+	log.Println("ctx done")
 }
 
 func printRoutine(ctx context.Context, period time.Duration) {
