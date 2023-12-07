@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	printRoutine()
+	go printRoutine()
 }
 
 func printRoutine() {
@@ -20,6 +20,7 @@ func printRoutine() {
 	for {
 		select {
 		default:
+			i++
 			log.Printf("print Routine : %d\n", i)
 			isComplete = false
 			time.Sleep(3 * time.Second)
