@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 var uploadMode *string
@@ -27,7 +28,7 @@ func main() {
 
 	gMux := gin.Default()
 
-	gMux.LoadHTMLGlob("/usr/src/app/templates/*")
+	gMux.LoadHTMLGlob("./templates/*")
 	gMux.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
@@ -50,36 +51,80 @@ func main() {
 				return
 			}
 
-			// 업로드된 파일 처리
-			if part.FileName() != "" {
-				filename := filepath.Join("/usr/src/app/uploads", part.FileName())
-				out, err := os.Create(filename)
-				if err != nil {
-					c.String(http.StatusInternalServerError, fmt.Sprintf("Create file error: %s", err.Error()))
-					return
-				}
-				defer out.Close()
-
-				_, err = io.Copy(out, part)
-				if err != nil {
-					c.String(http.StatusInternalServerError, fmt.Sprintf("Copy file error: %s", err.Error()))
-					return
-				}
-
-				c.String(http.StatusOK, fmt.Sprintf("File %s uploaded successfully!", part.FileName()))
+			if len(part.FileName()) == 0 {
+				break
 			}
+
+			filename := filepath.Join("./result/", part.FileName())
+			out, err := os.Create(filename)
+			if err != nil {
+				c.String(http.StatusInternalServerError, fmt.Sprintf("Create file error: %s", err.Error()))
+				return
+			}
+			defer out.Close()
+
+			var read int64
+			var written int64
+			var next int32 = 5
+
+			length := c.Request.ContentLength
+			buffer := make([]byte, 1024*1024)
+			for {
+				bytes, readErr := part.Read(buffer)
+				if readErr == io.EOF {
+					break
+				}
+
+				if readErr != nil {
+					c.String(http.StatusInternalServerError, fmt.Sprintf("file byte read error: %s", err.Error()))
+					return
+				}
+
+				if bytes <= 0 || buffer == nil {
+					c.String(http.StatusInternalServerError, fmt.Sprintf("close upload session: %s", err.Error()))
+					return
+				}
+
+				read = read + int64(bytes)
+				writtenBytes, err := out.Write(buffer[0:bytes])
+				if err != nil {
+					c.String(http.StatusInternalServerError, fmt.Sprintf("write session: %s", err.Error()))
+					return
+				}
+				written = written + int64(writtenBytes)
+
+				p := int32(float32(read) / float32(length) * 100)
+				if 0 != p && 0 == p%next {
+					log.Printf("upload processing : %s\n", strconv.Itoa(int(p)))
+					next += 5
+				}
+
+				if p == 99 {
+					log.Printf("upload processing complete")
+					break
+				}
+
+			}
+
+			_, err = io.Copy(out, part)
+			if err != nil {
+				c.String(http.StatusInternalServerError, fmt.Sprintf("Copy file error: %s", err.Error()))
+				return
+			}
+
+			c.String(http.StatusOK, fmt.Sprintf("File %s uploaded successfully!", part.FileName()))
 		}
 
 	})
 
 	if *uploadMode == "general" {
-		gMux.Run(":8081")
+		gMux.Run(":8082")
 	} else if *uploadMode == "graceful" {
 		srv := &graceful.Server{
 			Timeout:   0,
 			ConnState: func(conn net.Conn, state http.ConnState) {},
 			Server: &http.Server{
-				Addr:    ":8081",
+				Addr:    ":8082",
 				Handler: gMux,
 			},
 		}
