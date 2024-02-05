@@ -13,6 +13,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/orcaman/concurrent-map v1.0.0
 	github.com/redis/go-redis/v9 v9.0.5
+	github.com/rs/zerolog v1.15.0
 	github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da
 	github.com/shamaton/msgpack/v2 v2.1.1
 	github.com/streadway/amqp v1.1.0
