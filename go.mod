@@ -6,6 +6,7 @@ require (
 	github.com/curator-go/curator v0.0.0-20180923140012-8a961ea3b252
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dgraph-io/ristretto v0.1.1
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/jmespath/go-jmespath v0.4.0
@@ -13,7 +14,6 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/orcaman/concurrent-map v1.0.0
 	github.com/redis/go-redis/v9 v9.0.5
-	github.com/rs/zerolog v1.15.0
 	github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da
 	github.com/shamaton/msgpack/v2 v2.1.1
 	github.com/streadway/amqp v1.1.0
