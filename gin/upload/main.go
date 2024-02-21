@@ -63,9 +63,11 @@ func main() {
 			}
 			defer out.Close()
 
-			var read int64
-			var written int64
-			var next int32 = 5
+			var (
+				read    int64
+				written int64
+				next    int32 = 5
+			)
 
 			length := c.Request.ContentLength
 			buffer := make([]byte, 1024*1024)
