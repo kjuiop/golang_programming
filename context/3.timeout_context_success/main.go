@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 )
 
@@ -19,11 +16,6 @@ func main() {
 
 	<-ctx.Done()
 	log.Println("sub ctx receive sigterm signal")
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-
-	<-quit
 	cancel()
 	log.Println("receive sigint signal")
 }
