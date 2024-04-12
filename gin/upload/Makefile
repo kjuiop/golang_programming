@@ -5,7 +5,7 @@ BUILD_NUM_FILE=build.num
 BUILD_NUM=$$(cat ./build.num)
 APP_VERSION=$$(cat ./version.txt)
 TARGET_VERSION=$(APP_VERSION).$(BUILD_NUM)
-IMAGE_REPOSITORY="kjuiop"
+IMAGE_REPOSITORY={dockerRepository}
 
 TARGET_DIR=bin
 OUTPUT=$(PROJECT_PATH)/$(TARGET_DIR)/$(MODULE_NAME)
@@ -14,7 +14,7 @@ LDFLAGS=-X main.BUILD_TIME=`date -u '+%Y-%m-%d_%H:%M:%S'`
 LDFLAGS+=-X main.GIT_HASH=`git rev-parse HEAD`
 LDFLAGS+=-s -w
 
-all: config target-version docker-build docker-push
+all: config target-version docker-build
 
 config:
 	@if [ ! -d $(TARGET_DIR) ]; then mkdir $(TARGET_DIR); fi
@@ -25,6 +25,12 @@ build:
 
 docker-build:
 	docker build -f Dockerfile --tag $(IMAGE_REPOSITORY):$(TARGET_VERSION) .
+
+docker-run:
+	docker run --rm -d --name uploader -p 8082:8082 $(IMAGE_REPOSITORY):$(TARGET_VERSION)
+
+docker-stop:
+	docker stop -t 600 uploader
 
 docker-push:
 	docker push $(IMAGE_REPOSITORY):$(TARGET_VERSION)
