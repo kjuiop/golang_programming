@@ -24,7 +24,7 @@ func main() {
 				return
 			default:
 				i++
-				time.Sleep(time.Second * 1)
+				time.Sleep(time.Second * 20)
 				do(ctx, i)
 				select {
 				case <-ctx.Done():
@@ -32,7 +32,7 @@ func main() {
 					return
 				default:
 					fmt.Printf("print goroutine : %d\n", i)
-					time.Sleep(time.Second * 1)
+					time.Sleep(time.Second * 5)
 				}
 			}
 		}
@@ -82,7 +82,7 @@ func threeDo(ctx context.Context, i int) {
 	select {
 	case <-ctx.Done():
 		fmt.Println("five goroutine close")
-		time.Sleep(time.Second * 1)
+		time.Sleep(time.Second * 20)
 		return
 	default:
 		fmt.Printf("five goroutine : %d\n", i)
