@@ -3,29 +3,35 @@ package main
 import (
 	"context"
 	"log"
+	"sync"
 	"time"
 )
 
 func main() {
 
+	wg := sync.WaitGroup{}
 	parentContext := context.Background()
 
 	ctx, cancel := context.WithTimeout(parentContext, 5*time.Second)
 
-	go printRoutine(ctx)
+	wg.Add(1)
+	go printRoutine(ctx, &wg)
 
 	<-ctx.Done()
 	log.Println("sub ctx receive sigterm signal")
 	cancel()
 	log.Println("receive sigint signal")
+	wg.Wait()
+	log.Println("server shutdown complete")
 }
 
-func printRoutine(ctx context.Context) {
+func printRoutine(ctx context.Context, wg *sync.WaitGroup) {
 	i := 0
 	isComplete := false
 
 	defer func() {
 		log.Printf("is complete print Routine : %v\n", isComplete)
+		wg.Done()
 	}()
 
 	for {
