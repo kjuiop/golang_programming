@@ -17,7 +17,7 @@ func main() {
 
 	// Redis 클라이언트 생성
 	client := redis.NewFailoverClient(&redis.FailoverOptions{
-		MasterName:    "kollus",         // Sentinel에서 사용하는 마스터 이름
+		MasterName:    "jake",           // Sentinel에서 사용하는 마스터 이름
 		SentinelAddrs: sentinelAddrs,    // Sentinel 노드 주소
 		DB:            0,                // 사용할 데이터베이스 번호
 		Password:      "",               // Redis 비밀번호 (없는 경우 빈 문자열)
