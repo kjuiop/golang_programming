@@ -4,6 +4,7 @@ import (
 	"chat-gin/types"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"log"
 	"net/http"
 )
 
@@ -19,27 +20,46 @@ type Room struct {
 	Forward chan *message // 수신되는 메시지를 보관하는 값
 	// 들어오는 메시지를 다른 클라이언트에게 전송을 합니다.
 
-	Join  chan *Client // Socket 이 연결되는 경우에 적용
-	Leave chan *Client // Socket 이 끊어지는 경우에 대해서 적용
+	Join  chan *client // Socket 이 연결되는 경우에 적용
+	Leave chan *client // Socket 이 끊어지는 경우에 대해서 적용
 
-	Clients map[*Client]bool // 현재 방에 있는 Client 정보를 저장
+	Clients map[*client]bool // 현재 방에 있는 Client 정보를 저장
 }
 
 func NewRoom() *Room {
 	return &Room{
 		Forward: make(chan *message),
-		Join:    make(chan *Client),
-		Leave:   make(chan *Client),
-		Clients: make(map[*Client]bool),
+		Join:    make(chan *client),
+		Leave:   make(chan *client),
+		Clients: make(map[*client]bool),
 	}
 }
 
 func (r *Room) SocketServe(c *gin.Context) {
 
-	_, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	socket, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		panic(err)
+		log.Fatalln(err.Error())
+		return
 	}
+
+	userCookie, err := c.Request.Cookie("auth")
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
+	client := &client{
+		Socket: socket,
+		Send:   make(chan *message, types.MessageBufferSize),
+		Room:   r,
+		Name:   userCookie.Value,
+	}
+
+	r.Join <- client
+
+	defer func() {
+		r.Leave <- client
+	}()
 
 }
 
@@ -49,8 +69,8 @@ type message struct {
 	Time    int64
 }
 
-type Client struct {
-	Send   chan message
+type client struct {
+	Send   chan *message
 	Room   *Room
 	Name   string
 	Socket *websocket.Conn
