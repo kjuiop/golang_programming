@@ -63,6 +63,24 @@ func (r *Room) SocketServe(c *gin.Context) {
 
 }
 
+func (r *Room) RunInit() {
+	// Room 에 있는 모든 채널 값들을 받는 역할
+	for {
+		select {
+		case client := <-r.Join:
+			r.Clients[client] = true
+		case client := <-r.Leave:
+			r.Clients[client] = false
+			close(client.Send)
+			delete(r.Clients, client)
+		case msg := <-r.Forward:
+			for client := range r.Clients {
+				client.Send <- msg
+			}
+		}
+	}
+}
+
 type message struct {
 	Name    string
 	Message string
