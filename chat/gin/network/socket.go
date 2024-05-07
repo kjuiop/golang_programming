@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"time"
 )
 
 var upgrader = &websocket.Upgrader{
@@ -61,6 +62,10 @@ func (r *Room) SocketServe(c *gin.Context) {
 		r.Leave <- client
 	}()
 
+	go client.Write()
+
+	client.Read()
+
 }
 
 func (r *Room) RunInit() {
@@ -92,4 +97,31 @@ type client struct {
 	Room   *Room
 	Name   string
 	Socket *websocket.Conn
+}
+
+func (c *client) Read() {
+	defer c.Socket.Close()
+	// client 가 메시지를 읽는 함수
+
+	for {
+		var msg *message
+		if err := c.Socket.ReadJSON(&msg); err != nil {
+			log.Fatalln(err.Error())
+		}
+		msg.Time = time.Now().Unix()
+		msg.Name = c.Name
+
+		c.Room.Forward <- msg
+	}
+}
+
+func (c *client) Write() {
+	defer c.Socket.Close()
+	// client 가 메시지를 전송하는 함수
+
+	for msg := range c.Send {
+		if err := c.Socket.WriteJSON(msg); err != nil {
+			log.Fatalln(err.Error())
+		}
+	}
 }
