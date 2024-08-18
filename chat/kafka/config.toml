@@ -1,0 +1,3 @@
+[db]
+database = "mysql"
+url = "root:1234@tcp(localhost:3306)/chatting?multiStatements=true&parseTime=true"
