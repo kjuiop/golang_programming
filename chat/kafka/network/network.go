@@ -1,18 +1,28 @@
 package network
 
 import (
+	"chat-kafka/config"
+	"chat-kafka/repository"
+	"chat-kafka/service"
+	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 type Network struct {
-	engine *gin.Engine
+	cfg        *config.Config
+	engine     *gin.Engine
+	service    *service.Service
+	repository *repository.Repository
 }
 
-func NewServer() *Network {
+func NewServer(cfg *config.Config, service *service.Service, repository *repository.Repository) *Network {
+
 	n := &Network{
-		engine: gin.New(),
+		cfg:        cfg,
+		engine:     gin.New(),
+		service:    service,
+		repository: repository,
 	}
 
 	n.engine.Use(gin.Logger())
@@ -34,6 +44,5 @@ func NewServer() *Network {
 }
 
 func (n *Network) StartServer() error {
-	log.Panicln("starting server")
-	return n.engine.Run(":8090")
+	return n.engine.Run(fmt.Sprintf(":%s", n.cfg.Server.Port))
 }

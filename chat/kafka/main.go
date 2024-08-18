@@ -4,8 +4,8 @@ import (
 	"chat-kafka/config"
 	"chat-kafka/network"
 	"chat-kafka/repository"
+	"chat-kafka/service"
 	"flag"
-	"fmt"
 	"log"
 )
 
@@ -21,9 +21,9 @@ func main() {
 		log.Fatalf("failed connect mysql db, err : %v\n", err)
 	}
 
-	fmt.Println(mysqlRepo)
+	roomService := service.NewService(mysqlRepo)
 
-	n := network.NewServer()
+	n := network.NewServer(cfg, roomService, mysqlRepo)
 	if err := n.StartServer(); err != nil {
 		log.Fatalln("fail to start server")
 	}
