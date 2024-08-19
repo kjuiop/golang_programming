@@ -65,16 +65,18 @@ func (r *Repository) Room(name string) (*schema.Room, error) {
 	d := new(schema.Room)
 	qs := query([]string{"SELECT * FROM", room, "WHERE name = ?"})
 
-	if err := r.db.QueryRow(qs, name).Scan(
+	err := r.db.QueryRow(qs, name).Scan(
 		&d.ID,
 		&d.Name,
 		&d.CreatedAt,
 		&d.UpdatedAt,
-	); err != nil {
-		return nil, err
-	}
+	)
 
-	return d, nil
+	if err = noResult(err); err != nil {
+		return nil, err
+	} else {
+		return nil, nil
+	}
 }
 
 func (r *Repository) GetChatList(roomName string) ([]*schema.Chat, error) {
@@ -106,4 +108,12 @@ func (r *Repository) GetChatList(roomName string) ([]*schema.Chat, error) {
 
 func query(qs []string) string {
 	return strings.Join(qs, " ") + ";"
+}
+
+func noResult(err error) error {
+	if strings.Contains(err.Error(), "sql: no rows in result set") {
+		return nil
+	} else {
+		return err
+	}
 }
