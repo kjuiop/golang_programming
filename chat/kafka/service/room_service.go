@@ -51,3 +51,9 @@ func (s *Service) Room(name string) (*schema.Room, error) {
 		return res, nil
 	}
 }
+
+func (s *Service) InsertChatting(user string, message string, roomName string) {
+	if err := s.repo.InsertChatting(user, message, roomName); err != nil {
+		log.Printf("failed insert chatting, err : %v\n", err)
+	}
+}

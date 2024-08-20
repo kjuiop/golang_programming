@@ -5,6 +5,7 @@ import (
 	"chat-kafka/types/schema"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 	"strings"
 )
 
@@ -104,6 +105,13 @@ func (r *Repository) GetChatList(roomName string) ([]*schema.Chat, error) {
 			return result, nil
 		}
 	}
+}
+
+func (r *Repository) InsertChatting(user string, message string, roomName string) error {
+	log.Println("Insert Chatting Using WSS", "from", user, "message", message, "room", roomName)
+	_, err := r.db.Exec("INSERT INTO chatting.chat(room, name, message) VALUES(?,?,?)", roomName)
+
+	return err
 }
 
 func query(qs []string) string {

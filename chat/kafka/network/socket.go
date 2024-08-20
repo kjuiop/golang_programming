@@ -1,6 +1,7 @@
 package network
 
 import (
+	"chat-kafka/service"
 	"chat-kafka/types"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -25,14 +26,17 @@ type Room struct {
 	Leave chan *client // Socket 이 끊어지는 경우에 대해서 적용
 
 	Clients map[*client]bool // 현재 방에 있는 Client 정보를 저장
+
+	service *service.Service
 }
 
-func NewRoom() *Room {
+func NewRoom(service *service.Service) *Room {
 	return &Room{
 		Forward: make(chan *message),
 		Join:    make(chan *client),
 		Leave:   make(chan *client),
 		Clients: make(map[*client]bool),
+		service: service,
 	}
 }
 
@@ -68,7 +72,7 @@ func (r *Room) SocketServe(c *gin.Context) {
 
 }
 
-func (r *Room) RunInit() {
+func (r *Room) Run() {
 	// Room 에 있는 모든 채널 값들을 받는 역할
 	for {
 		select {
@@ -79,6 +83,9 @@ func (r *Room) RunInit() {
 			close(client.Send)
 			delete(r.Clients, client)
 		case msg := <-r.Forward:
+
+			go r.service.InsertChatting(msg.Name, msg.Message, msg.Room)
+
 			for client := range r.Clients {
 				client.Send <- msg
 			}
@@ -90,6 +97,7 @@ type message struct {
 	Name    string
 	Message string
 	Time    int64
+	Room    string
 }
 
 type client struct {
