@@ -18,7 +18,7 @@ func main() {
 	cfg := config.NewConfig(*pathFlag)
 	mysqlRepo, err := repository.NewRepository(cfg)
 	if err != nil {
-		log.Fatalf("failed connect mysql db, err : %v\n", err)
+		log.Fatalf("failed connect, err : %v\n", err)
 	}
 
 	roomService := service.NewService(mysqlRepo)

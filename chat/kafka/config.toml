@@ -3,5 +3,9 @@ database = "mysql"
 url = "root:1234@tcp(localhost:3306)/chatting?multiStatements=true&parseTime=true"
 
 [server]
-port = "1010"
-ip = "localhost"
+Port = "1010"
+IP = "localhost"
+
+[kafka]
+url = "localhost:9292"
+clientid = "chat-producer-1"

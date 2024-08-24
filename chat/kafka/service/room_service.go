@@ -3,6 +3,7 @@ package service
 import (
 	"chat-kafka/repository"
 	"chat-kafka/types/schema"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"log"
 )
 
@@ -14,6 +15,19 @@ func NewService(repository *repository.Repository) *Service {
 	return &Service{
 		repo: repository,
 	}
+}
+
+func (s *Service) ServerSet(ip string, available bool) error {
+	if err := s.repo.ServerSet(ip, available); err != nil {
+		log.Println("Failed To ServerSet", "ip", ip, "available", available)
+		return err
+	} else {
+		return nil
+	}
+}
+
+func (s *Service) PublishEvent(topic string, value []byte, ch chan kafka.Event) (kafka.Event, error) {
+	return s.repo.Kafka.PublishEvent(topic, value, ch)
 }
 
 func (s *Service) EnterRoom(roomName string) ([]*schema.Chat, error) {

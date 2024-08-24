@@ -21,6 +21,6 @@ CREATE TABLE chat (
 
 -- server 관리 테이블
 CREATE TABLE serverInfo (
-    `id` varchar(255) PRIMARY KEY NOT NULL,
+    `ip` varchar(255) PRIMARY KEY NOT NULL,
     `available` bool NOT NULL
 );
