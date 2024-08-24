@@ -7,5 +7,5 @@ Port = "1010"
 IP = "localhost"
 
 [kafka]
-url = "localhost:9292"
-clientid = "chat-producer-1"
+URL = "localhost:9292"
+ClientID = "chat-producer-1"
