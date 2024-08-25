@@ -1,0 +1,10 @@
+[db]
+database = "mysql"
+url = "root:1234@tcp(localhost:3306)/chatting?multiStatements=true&parseTime=true"
+
+[server]
+Port = "7070"
+
+[kafka]
+URL = "localhost:9292"
+ClientID = "chat-producer-1"
