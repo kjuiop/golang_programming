@@ -10,22 +10,24 @@ import (
 )
 
 type Server struct {
-	cfg        *config.Config
-	engine     *gin.Engine
-	service    *service.Service
-	repository *repository.Repository
-	ip         string
-	port       string
+	cfg           *config.Config
+	engine        *gin.Engine
+	service       *service.Service
+	repository    *repository.Repository
+	ip            string
+	port          string
+	avgServerList map[string]bool
 }
 
 func NewNetwork(cfg *config.Config, service *service.Service, repository *repository.Repository) *Server {
 
 	s := &Server{
-		cfg:        cfg,
-		engine:     gin.New(),
-		service:    service,
-		repository: repository,
-		port:       cfg.Server.Port,
+		cfg:           cfg,
+		engine:        gin.New(),
+		service:       service,
+		repository:    repository,
+		port:          cfg.Server.Port,
+		avgServerList: make(map[string]bool),
 	}
 
 	s.engine.Use(gin.Logger())
@@ -37,6 +39,8 @@ func NewNetwork(cfg *config.Config, service *service.Service, repository *reposi
 		AllowHeaders:     []string{"*"},
 		AllowCredentials: true,
 	}))
+
+	registerTowerAPI(s)
 
 	return s
 }
