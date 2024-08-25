@@ -7,4 +7,4 @@ Port = "7070"
 
 [kafka]
 URL = "localhost:9292"
-ClientID = "chat-producer-1"
+GroupID = "chat-consumer-1"

@@ -4,9 +4,7 @@ import (
 	"chat-kafka/config"
 	"chat-kafka/repository"
 	"chat-kafka/service"
-	"encoding/json"
 	"fmt"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -23,11 +21,6 @@ type Server struct {
 	repository *repository.Repository
 	ip         string
 	port       string
-}
-
-type ServerInfoEvent struct {
-	IP     string
-	Status bool
 }
 
 func NewServer(cfg *config.Config, service *service.Service, repository *repository.Repository) *Server {
@@ -76,12 +69,14 @@ func (n *Server) setServerInfo() {
 		if ip == nil {
 			log.Fatalln("no ip address found")
 		}
-
-		if err = n.service.ServerSet(fmt.Sprintf("%s:%s", ip.String(), n.port), true); err != nil {
+		addr := fmt.Sprintf("%s:%s", ip.String(), n.port)
+		if err = n.service.ServerSet(addr, true); err != nil {
 			log.Fatalln(err.Error())
-		} else {
-			n.ip = ip.String()
 		}
+
+		n.ip = ip.String()
+		n.service.PublishServerStatusEvent(addr, true)
+
 	}
 }
 
@@ -99,19 +94,7 @@ func (n *Server) StartServer() error {
 			// 실패케이스 추가 처리 필요
 			log.Println("Failed to set server info when close", "err", err.Error())
 		}
-
-		// kafka 이벤트 전송
-		e := &ServerInfoEvent{IP: addr, Status: false}
-		ch := make(chan kafka.Event)
-
-		if v, err := json.Marshal(e); err != nil {
-			log.Println("Failed to Marshal")
-		} else if result, err := n.service.PublishEvent("chat", v, ch); err != nil {
-			log.Println("Failed To Send Event To Kafka", "err", err)
-		} else {
-			// Send Event To Kafka
-			log.Println("Success To Send Event", result)
-		}
+		n.service.PublishServerStatusEvent(addr, false)
 		os.Exit(1)
 	}()
 
